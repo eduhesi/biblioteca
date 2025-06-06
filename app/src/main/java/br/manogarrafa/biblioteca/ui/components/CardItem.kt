@@ -44,7 +44,7 @@ fun CardItem(title: String, count: Int = 0) {
     ) {
         Image(
             painter = painterResource(R.drawable.vampeerz),
-            contentDescription = "Capa de Vampeerz nº 2",
+            contentDescription = "Capa de $title",
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.clip(RoundedCornerShape(8.dp))
         )
@@ -61,6 +61,7 @@ fun CardItem(title: String, count: Int = 0) {
                 text = title,
                 textAlign = TextAlign.Center,
                 style = Typography.titleMedium,
+                maxLines = 2
             )
         }
         if (count > 1) {
