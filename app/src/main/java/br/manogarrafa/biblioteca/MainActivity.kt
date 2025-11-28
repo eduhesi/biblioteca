@@ -5,17 +5,26 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.manogarrafa.biblioteca.ui.components.CardItem
 import br.manogarrafa.biblioteca.ui.components.CardList
+import br.manogarrafa.biblioteca.ui.components.Search
 import br.manogarrafa.biblioteca.ui.theme.BibliotecaTheme
 import br.manogarrafa.biblioteca.ui.utils.Book
 
@@ -27,16 +36,40 @@ class MainActivity : ComponentActivity() {
         setContent {
             BibliotecaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    Column {
-//                        Spacer(Modifier.padding(innerPadding))
-//                        Spacer(Modifier.fillMaxSize().height(16.dp))
-                        CardList(Modifier.padding(innerPadding))
-//                    }
+                    MainScreen(innerPadding)
                 }
             }
         }
     }
 }
+
+@Composable
+fun MainScreen(innerPadding: PaddingValues) {
+    var query by remember { mutableStateOf("") }
+    var hasFilter by remember { mutableStateOf(false) }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+            .padding(horizontal = 16.dp) // margem lateral
+    ) {
+        Spacer(Modifier.height(16.dp))
+        Search(
+            onSearch = {
+                query = it
+                hasFilter = it.isNotEmpty()
+            }
+        )
+        Spacer(Modifier.height(16.dp))
+        CardList(
+            modifier = Modifier
+                .weight(1f)
+                .padding(bottom = 16.dp),
+            hasFilter = hasFilter
+        )
+    }
+}
+
 
 @OptIn(ExperimentalLayoutApi::class)
 @Preview(showBackground = true)
