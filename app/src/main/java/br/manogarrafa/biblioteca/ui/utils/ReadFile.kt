@@ -1,6 +1,9 @@
 package br.manogarrafa.biblioteca.ui.utils
 
 import android.content.Context
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -19,8 +22,9 @@ data class Edition(
 )
 
 
-fun readFile(fileName: String, context: Context): MutableList<Book>? {
-    return try {
+fun readFile(fileName: String, context: Context): Flow<MutableList<Book>?> = flow {
+    delay(1000L)
+    try {
         // Abre o arquivo da pasta assets
         val inputStream = context.assets.open(fileName)
         val reader = BufferedReader(InputStreamReader(inputStream))
@@ -65,10 +69,10 @@ fun readFile(fileName: String, context: Context): MutableList<Book>? {
                 }
             }
         }
-        books
+        emit(books)
     } catch (e: Exception) {
         e.printStackTrace()
-        null // Retorna null em caso de erro, como arquivo não encontrado
+        emit(null) // Retorna null em caso de erro, como arquivo não encontrado
     }
 }
 

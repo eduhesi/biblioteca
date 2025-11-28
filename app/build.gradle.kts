@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "br.manogarrafa.biblioteca"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "br.manogarrafa.biblioteca"
@@ -49,6 +49,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.viewmodel)
+    implementation(libs.androidx.compose.livedata)
+    implementation("androidx.compose.foundation:foundation:1.2.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

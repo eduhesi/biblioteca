@@ -18,29 +18,23 @@ import br.manogarrafa.biblioteca.ui.components.CardItem
 import br.manogarrafa.biblioteca.ui.components.CardList
 import br.manogarrafa.biblioteca.ui.theme.BibliotecaTheme
 import br.manogarrafa.biblioteca.ui.utils.Book
-import br.manogarrafa.biblioteca.ui.utils.readFile
 
 class MainActivity : ComponentActivity() {
-
-    private var data: MutableList<Book> = mutableListOf()
-
     @OptIn(ExperimentalLayoutApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        getData()
         enableEdgeToEdge()
         setContent {
             BibliotecaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CardList(data, Modifier.padding(innerPadding))
+//                    Column {
+//                        Spacer(Modifier.padding(innerPadding))
+//                        Spacer(Modifier.fillMaxSize().height(16.dp))
+                        CardList(Modifier.padding(innerPadding))
+//                    }
                 }
             }
         }
-    }
-
-    private fun getData() {
-        data = readFile("colecao_estrangeira_completa.txt", context = this.applicationContext)
-            ?: mutableListOf()
     }
 }
 
@@ -55,9 +49,33 @@ fun MainPreview() {
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier.fillMaxSize()
         ) {
-            CardItem("Vampeerz", 5)
-            CardItem("That time I got reincarned as a slime", 21)
-            CardItem("I prefer girls")
+            CardItem(
+                Book(
+                    title = "Vampeerz",
+                    quantity = 5,
+                    publisher = "",
+                    price = 1.0,
+                    publicationYear = 2020
+                )
+            )
+            CardItem(
+                Book(
+                    title = "That time I got reincarned as a slime",
+                    quantity = 21,
+                    publisher = "",
+                    price = 1.0,
+                    publicationYear = 2020
+                )
+            )
+            CardItem(
+                Book(
+                    title = "I prefer girls",
+                    publisher = "",
+                    price = 1.0,
+                    publicationYear = 2020,
+                    quantity = 1
+                )
+            )
         }
     }
 }
