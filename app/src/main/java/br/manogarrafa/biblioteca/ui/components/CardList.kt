@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import br.manogarrafa.biblioteca.ui.utils.Book
+import br.manogarrafa.biblioteca.ui.utils.BookFilterStrategy
 import br.manogarrafa.biblioteca.ui.viewmodel.BooksUiState
 import br.manogarrafa.biblioteca.ui.viewmodel.BooksViewModel
 
@@ -28,7 +28,7 @@ fun CardList(
     modifier: Modifier = Modifier,
     hasFilter: Boolean = false,
     query: String,
-    filterFunction: (Book, String) -> Boolean
+    filterStrategy: BookFilterStrategy
 ) {
     val booksViewModel: BooksViewModel = viewModel()
     val context = LocalContext.current
@@ -45,7 +45,7 @@ fun CardList(
             val data = (bookState as BooksUiState.Success).data
 
             val list = if (hasFilter) {
-                data.filter { filterFunction(it, query) }
+                data.filter { filterStrategy.filter(it, query) }
             } else {
                 data
             }

@@ -22,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,36 +29,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.manogarrafa.biblioteca.ui.theme.BibliotecaTheme
-import br.manogarrafa.biblioteca.ui.utils.Book
+import br.manogarrafa.biblioteca.ui.utils.SearchByOption
 import android.R as androidR
 
-sealed class SearchByOption(
-    val iconRes: Int,
-    val description: String,
-    val filter: (Book, String) -> Boolean
-) {
-    object Name : SearchByOption(
-        iconRes = androidR.drawable.ic_menu_crop,
-        description = "Busca por nome",
-        filter = { book, query -> book.title.contains(query, ignoreCase = true) }
-    )
-
-    object Quantity : SearchByOption(
-        iconRes = androidR.drawable.ic_menu_zoom,
-        description = "Busca por quantidade",
-        filter = { book, query -> book.quantity.toString() == query }
-    )
-
-    object PublishYear : SearchByOption(
-        iconRes = androidR.drawable.ic_menu_my_calendar,
-        description = "Busca por ano",
-        filter = { book, query -> book.publicationYear?.toString() == query }
-    )
-
-    companion object {
-        val values = listOf(Name, Quantity, PublishYear)
-    }
-}
 
 @Composable
 fun SearchBySelector(
@@ -112,7 +84,6 @@ fun Search(
     onSearch: (String) -> Unit,
     onSelect: (SearchByOption) -> Unit
 ) {
-    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     var text by remember { mutableStateOf("") }
     Row(

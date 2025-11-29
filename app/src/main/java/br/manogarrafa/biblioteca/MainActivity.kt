@@ -25,9 +25,9 @@ import androidx.compose.ui.unit.dp
 import br.manogarrafa.biblioteca.ui.components.CardItem
 import br.manogarrafa.biblioteca.ui.components.CardList
 import br.manogarrafa.biblioteca.ui.components.Search
-import br.manogarrafa.biblioteca.ui.components.SearchByOption
 import br.manogarrafa.biblioteca.ui.theme.BibliotecaTheme
 import br.manogarrafa.biblioteca.ui.utils.Book
+import br.manogarrafa.biblioteca.ui.utils.SearchByOption
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalLayoutApi::class)
@@ -72,7 +72,7 @@ fun MainScreen(innerPadding: PaddingValues) {
                 .padding(bottom = 16.dp),
             hasFilter = hasFilter,
             query = query,
-            filterFunction = { b, q -> selectedOption.filter(b, q) }
+            filterStrategy = selectedOption.filterStrategy
         )
     }
 }
