@@ -32,20 +32,20 @@ import br.manogarrafa.biblioteca.ui.theme.BibliotecaTheme
 import br.manogarrafa.biblioteca.ui.utils.SearchByOption
 import android.R as androidR
 
-
 @Composable
 fun SearchBySelector(
     modifier: Modifier = Modifier,
-    selected: SearchByOption,
-    onSelect: (SearchByOption) -> Unit
+    selected: Pair<SearchByOption, (SearchByOption) -> Unit>,
 ) {
     var expanded by remember { mutableStateOf(false) }
+
+    val (optionSelected, action) = selected
 
     Box(modifier = modifier) {
         IconButton(onClick = { expanded = true }) {
             Icon(
-                painter = painterResource(id = selected.iconRes),
-                contentDescription = selected.description,
+                painter = painterResource(id = optionSelected.iconRes),
+                contentDescription = optionSelected.description,
                 tint = if (expanded) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onSurface
             )
         }
@@ -69,7 +69,7 @@ fun SearchBySelector(
                         )
                     },
                     onClick = {
-                        onSelect(option)
+                        action(option)
                         expanded = false
                     }
                 )
@@ -79,10 +79,26 @@ fun SearchBySelector(
 }
 
 @Composable
+fun OrderSelection(
+    modifier: Modifier = Modifier,
+    order: Pair<Boolean, (Boolean) -> Unit>
+) {
+    IconButton(onClick = {
+        order.second(order.first.not())
+    }, modifier) {
+        Icon(
+            painter = painterResource(id = androidR.drawable.ic_menu_directions),
+            contentDescription = "Alterar ordem",
+            tint = if (order.first) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary
+        )
+    }
+}
+
+@Composable
 fun Search(
-    selected: SearchByOption,
+    selected: Pair<SearchByOption, (SearchByOption) -> Unit>,
     onSearch: (String) -> Unit,
-    onSelect: (SearchByOption) -> Unit
+    order: Pair<Boolean, (Boolean) -> Unit>
 ) {
     val focusManager = LocalFocusManager.current
     var text by remember { mutableStateOf("") }
@@ -93,9 +109,9 @@ fun Search(
     ) {
         SearchBySelector(
             selected = selected,
-            onSelect = { onSelect(it) },
             modifier = Modifier.weight(0.1f)
         )
+        OrderSelection(order = order, modifier = Modifier.weight(0.1f))
         TextField(
             value = text,
             onValueChange = { text = it },
@@ -106,7 +122,7 @@ fun Search(
                 cursorColor = MaterialTheme.colorScheme.tertiary            // Cursor em foco
             ),
             modifier = Modifier
-                .weight(0.75f),
+                .weight(1f),
             singleLine = true,
             // Fecha o teclado ao pressionar "Done" no teclado
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
@@ -118,15 +134,15 @@ fun Search(
             )
         )
         Spacer(modifier = Modifier.width(8.dp))
-        IconButton(onClick = {
-            focusManager.clearFocus()
-            onSearch(text)
-        }) {
-            Icon(
-                painter = painterResource(id = androidR.drawable.ic_menu_search),
-                contentDescription = "Buscar"
-            )
-        }
+//        IconButton(onClick = {
+//            focusManager.clearFocus()
+//            onSearch(text)
+//        }) {
+//            Icon(
+//                painter = painterResource(id = androidR.drawable.ic_menu_search),
+//                contentDescription = "Buscar"
+//            )
+//        }
     }
 }
 
@@ -134,6 +150,6 @@ fun Search(
 @Composable
 fun SearchPreview() {
     BibliotecaTheme {
-        Search(selected = SearchByOption.Name, onSearch = { it }, onSelect = { it })
+        Search(selected = SearchByOption.Name to { it }, onSearch = { it }, order = true to { it })
     }
 }

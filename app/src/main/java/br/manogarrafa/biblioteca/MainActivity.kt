@@ -49,6 +49,7 @@ fun MainScreen(innerPadding: PaddingValues) {
     var query by remember { mutableStateOf("") }
     var hasFilter by remember { mutableStateOf(false) }
     var selectedOption by remember { mutableStateOf(SearchByOption.values[0]) }
+    var orderMode by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -62,8 +63,8 @@ fun MainScreen(innerPadding: PaddingValues) {
                 query = it
                 hasFilter = it.isNotEmpty()
             },
-            onSelect = { selectedOption = it },
-            selected = selectedOption
+            selected = selectedOption to { selectedOption = it },
+            order = orderMode to { orderMode = it }
         )
         Spacer(Modifier.height(16.dp))
         CardList(
@@ -71,6 +72,7 @@ fun MainScreen(innerPadding: PaddingValues) {
                 .weight(1f)
                 .padding(bottom = 16.dp),
             hasFilter = hasFilter,
+            orderMode = orderMode,
             query = query,
             filterStrategy = selectedOption.filterStrategy
         )
