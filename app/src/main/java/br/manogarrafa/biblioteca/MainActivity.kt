@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import br.manogarrafa.biblioteca.ui.components.CardItem
 import br.manogarrafa.biblioteca.ui.components.CardList
 import br.manogarrafa.biblioteca.ui.components.Search
+import br.manogarrafa.biblioteca.ui.components.SearchByOption
 import br.manogarrafa.biblioteca.ui.theme.BibliotecaTheme
 import br.manogarrafa.biblioteca.ui.utils.Book
 
@@ -47,6 +48,8 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(innerPadding: PaddingValues) {
     var query by remember { mutableStateOf("") }
     var hasFilter by remember { mutableStateOf(false) }
+    var selectedOption by remember { mutableStateOf(SearchByOption.values[0]) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,14 +61,18 @@ fun MainScreen(innerPadding: PaddingValues) {
             onSearch = {
                 query = it
                 hasFilter = it.isNotEmpty()
-            }
+            },
+            onSelect = { selectedOption = it },
+            selected = selectedOption
         )
         Spacer(Modifier.height(16.dp))
         CardList(
             modifier = Modifier
                 .weight(1f)
                 .padding(bottom = 16.dp),
-            hasFilter = hasFilter
+            hasFilter = hasFilter,
+            query = query,
+            filterFunction = { b, q -> selectedOption.filter(b, q) }
         )
     }
 }

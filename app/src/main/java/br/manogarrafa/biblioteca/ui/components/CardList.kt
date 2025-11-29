@@ -18,12 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import br.manogarrafa.biblioteca.ui.utils.Book
 import br.manogarrafa.biblioteca.ui.viewmodel.BooksUiState
 import br.manogarrafa.biblioteca.ui.viewmodel.BooksViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CardList(modifier: Modifier = Modifier, hasFilter: Boolean = false) {
+fun CardList(
+    modifier: Modifier = Modifier,
+    hasFilter: Boolean = false,
+    query: String,
+    filterFunction: (Book, String) -> Boolean
+) {
     val booksViewModel: BooksViewModel = viewModel()
     val context = LocalContext.current
 
@@ -39,7 +45,7 @@ fun CardList(modifier: Modifier = Modifier, hasFilter: Boolean = false) {
             val data = (bookState as BooksUiState.Success).data
 
             val list = if (hasFilter) {
-                data.filter { it.title.contains("time", ignoreCase = true) }
+                data.filter { filterFunction(it, query) }
             } else {
                 data
             }
