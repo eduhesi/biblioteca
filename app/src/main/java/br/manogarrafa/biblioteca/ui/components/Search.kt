@@ -16,10 +16,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -30,6 +32,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.manogarrafa.biblioteca.ui.theme.BibliotecaTheme
 import br.manogarrafa.biblioteca.ui.utils.SearchByOption
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import android.R as androidR
 
 @Composable
@@ -94,6 +100,7 @@ fun OrderSelection(
     }
 }
 
+@OptIn(FlowPreview::class)
 @Composable
 fun Search(
     selected: Pair<SearchByOption, (SearchByOption) -> Unit>,
@@ -102,6 +109,15 @@ fun Search(
 ) {
     val focusManager = LocalFocusManager.current
     var text by remember { mutableStateOf("") }
+
+    LaunchedEffect(text) {
+        snapshotFlow { text }
+            .debounce(500)
+            .distinctUntilChanged()
+            //.filter { it.isNotBlank() }
+            .collectLatest { onSearch(it) }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth(),
