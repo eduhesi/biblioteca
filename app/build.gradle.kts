@@ -51,7 +51,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.compose.viewmodel)
     implementation(libs.androidx.compose.livedata)
-    implementation("androidx.compose.foundation:foundation:1.2.0")
+    implementation(libs.androidx.foundation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

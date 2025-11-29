@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -40,27 +42,36 @@ fun CardList(
     }
 
     val bookState by booksViewModel.data.collectAsState()
+    val state = rememberPullToRefreshState()
 //    var currentPage by remember { mutableIntStateOf(0) }
-    when (bookState) {
-        is BooksUiState.Success -> {
-            val data =
-                filterStrategy.sort((bookState as BooksUiState.Success).data, desc = orderMode)
+    PullToRefreshBox(
+        isRefreshing = bookState is BooksUiState.Loading,
+        state = state,
+        onRefresh = { booksViewModel.fetchData(context) }
+    ) {
+        when (bookState) {
+            is BooksUiState.Success -> {
+                val data =
+                    filterStrategy.sort(
+                        (bookState as BooksUiState.Success).data,
+                        desc = orderMode
+                    )
 
-            val list = if (hasFilter) {
-                data.filter { filterStrategy.filter(it, query) }
-            } else {
-                data
-            }
-
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = modifier
-            ) {
-                items(list) {
-                    CardItem(it)
+                val list = if (hasFilter) {
+                    data.filter { filterStrategy.filter(it, query) }
+                } else {
+                    data
                 }
+
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = modifier
+                ) {
+                    items(list) {
+                        CardItem(it)
+                    }
 //                itemsIndexed(list) { index, book ->
 //                    CardItem(book)
 //                    // Trigger fetch when 80% of the list is reached
@@ -71,18 +82,19 @@ fun CardList(
 //                        }
 //                    }
 //                }
+                }
             }
-        }
 
-        is BooksUiState.Loading -> {
-            Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
+            is BooksUiState.Loading -> {
+                Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+//                    CircularProgressIndicator()
+                }
             }
-        }
 
-        is BooksUiState.Error -> {
-            Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Erro")
+            is BooksUiState.Error -> {
+                Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("Erro")
+                }
             }
         }
     }
