@@ -101,18 +101,21 @@ fun CardItemPreview() {
             items(
                 listOf(
                     Book(
+                        id = 0,
                         title = "Vampeerz",
                         quantity = 5,
                         publisher = "",
                         price = 1.0,
                         publicationYear = 2020
                     ), Book(
+                        id = 0,
                         title = "That time I got reincarned as a slime",
                         quantity = 21,
                         publisher = "",
                         price = 1.0,
                         publicationYear = 2020
                     ), Book(
+                        id = 0,
                         title = "I prefer girls",
                         publisher = "",
                         price = 1.0,

@@ -8,24 +8,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.compose.runtime.getValue
-import androidx.navigation.compose.rememberNavController
+import br.manogarrafa.biblioteca.navigation.AppNavHost
 import br.manogarrafa.biblioteca.ui.components.CardItem
 import br.manogarrafa.biblioteca.ui.theme.BibliotecaTheme
 import br.manogarrafa.biblioteca.ui.utils.Book
-import br.manogarrafa.biblioteca.ui.view.BookDetail
-import br.manogarrafa.biblioteca.ui.view.MainScreen
-import br.manogarrafa.biblioteca.ui.viewmodel.NavigationViewModel
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalLayoutApi::class)
@@ -40,32 +30,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun AppNavHost() {
-    val navController = rememberNavController()
-    val navViewModel: NavigationViewModel = viewModel()
-    NavHost(navController, startDestination = "ListAll") {
-        composable("ListAll") {
-            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                MainScreen(modifier = Modifier.padding(innerPadding)) { book ->
-                    navViewModel.selectBook(book)
-                    navController.navigate("BookDetails")
-                }
-            }
-        }
-
-        composable("BookDetails") {
-            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                val book by navViewModel.currentBook.observeAsState()
-                book?.let {
-                    BookDetail(modifier = Modifier.padding(innerPadding), book = it)
-                }
-            }
-        }
-    }
-}
-
-
 @OptIn(ExperimentalLayoutApi::class)
 @Preview(showBackground = true)
 @Composable
@@ -79,6 +43,7 @@ fun MainPreview() {
         ) {
             CardItem(
                 book = Book(
+                    id = 0,
                     title = "Vampeerz",
                     quantity = 5,
                     publisher = "",
@@ -88,6 +53,7 @@ fun MainPreview() {
             )
             CardItem(
                 book = Book(
+                    id = 0,
                     title = "That time I got reincarned as a slime",
                     quantity = 21,
                     publisher = "",
@@ -97,6 +63,7 @@ fun MainPreview() {
             )
             CardItem(
                 book = Book(
+                    id = 0,
                     title = "I prefer girls",
                     publisher = "",
                     price = 1.0,

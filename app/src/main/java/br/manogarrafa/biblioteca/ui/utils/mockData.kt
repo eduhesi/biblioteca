@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.flow
 fun mockData(page: Int = 0): Flow<List<Book>> = flow {
     fun generateItem(pos: Int): Book {
         return Book(
+            id = 0,
             title = "item - ${page * pos + pos}",
             publicationYear = 2025,
             publisher = "publisher",

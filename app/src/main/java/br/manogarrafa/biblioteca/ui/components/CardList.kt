@@ -52,7 +52,7 @@ fun CardList(
         onRefresh = { booksViewModel.fetchData(context) }
     ) {
         when (bookState) {
-            is BooksUiState.Success -> {
+            is BooksUiState.Success<List<Book>> -> {
                 val data =
                     filterStrategy.sort(
                         (bookState as BooksUiState.Success).data,

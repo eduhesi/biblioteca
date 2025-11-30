@@ -8,6 +8,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 data class Book(
+    val id: Int,
     val title: String,
     val publicationYear: Int?,
     val publisher: String,
@@ -21,10 +22,10 @@ data class Edition(
     val state: String
 )
 
-
 fun readFile(fileName: String, context: Context): Flow<MutableList<Book>?> = flow {
     delay(1000L)
     try {
+        var id = 0
         // Abre o arquivo da pasta assets
         val inputStream = context.assets.open(fileName)
         val reader = BufferedReader(InputStreamReader(inputStream))
@@ -57,7 +58,8 @@ fun readFile(fileName: String, context: Context): Flow<MutableList<Book>?> = flo
                                 .trim()
                                 .toInt()
 
-                        books.add(Book(cleanTitle, publicationYear, publisher, price, quantity))
+                        books.add(Book(id, cleanTitle, publicationYear, publisher, price, quantity))
+                        id += 1
                     }
 
                     line.startsWith(" nº") -> {

@@ -9,29 +9,48 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-sealed interface BooksUiState {
-    object Error : BooksUiState
-    object Loading : BooksUiState
-    data class Success(val data: List<Book>) : BooksUiState
+sealed interface BooksUiState<out T> {
+    object Error : BooksUiState<Nothing>
+    object Loading : BooksUiState<Nothing>
+    data class Success<T>(val data: T) : BooksUiState<T>
 }
 
 class BooksViewModel : ViewModel() {
 
-    private val _data = MutableStateFlow<BooksUiState>(BooksUiState.Loading)
+    private val _data = MutableStateFlow<BooksUiState<List<Book>>>(BooksUiState.Loading)
     val data = _data.asStateFlow()
+
+    private fun getList(context: Context, callback: (List<Book>) -> Unit) = viewModelScope.launch {
+        readFile("colecao_estrangeira_completa.txt", context = context).collect { books ->
+            callback(books?.toList().orEmpty())
+        }
+    }
 
     fun fetchData(context: Context) = viewModelScope.launch {
         _data.value = BooksUiState.Loading
         try {
-            readFile("colecao_estrangeira_completa.txt", context = context).collect { books ->
-                books?.let {
+            getList(context) { books ->
+                books.let {
                     _data.value = BooksUiState.Success(it)
-                } ?: run {
-                    _data.value = BooksUiState.Error
                 }
             }
         } catch (e: Exception) {
             _data.value = BooksUiState.Error
+        }
+    }
+
+    private val _book = MutableStateFlow<BooksUiState<Book>>(BooksUiState.Loading)
+    val book = _book.asStateFlow()
+
+    fun fetchById(id: Int, context: Context) = viewModelScope.launch {
+        _book.value = BooksUiState.Loading
+        try {
+            getList(context) { books ->
+                val value = books.first { it.id == id }
+                _book.value = BooksUiState.Success(value)
+            }
+        } catch (e: Exception) {
+            _book.value = BooksUiState.Error
         }
     }
 }
