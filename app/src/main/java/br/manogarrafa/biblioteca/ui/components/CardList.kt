@@ -1,6 +1,7 @@
 package br.manogarrafa.biblioteca.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import br.manogarrafa.biblioteca.ui.utils.Book
 import br.manogarrafa.biblioteca.ui.utils.BookStrategy
 import br.manogarrafa.biblioteca.ui.viewmodel.BooksUiState
 import br.manogarrafa.biblioteca.ui.viewmodel.BooksViewModel
@@ -30,7 +32,8 @@ fun CardList(
     hasFilter: Boolean = false,
     orderMode: Boolean,
     query: String,
-    filterStrategy: BookStrategy
+    filterStrategy: BookStrategy,
+    onBookClick: (Book) -> Unit
 ) {
     val booksViewModel: BooksViewModel = viewModel()
     val context = LocalContext.current
@@ -69,7 +72,9 @@ fun CardList(
                     modifier = modifier
                 ) {
                     items(list) {
-                        CardItem(it)
+                        CardItem(book = it, modifier = Modifier.clickable {
+                            onBookClick(it)
+                        })
                     }
 //                itemsIndexed(list) { index, book ->
 //                    CardItem(book)

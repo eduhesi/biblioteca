@@ -33,12 +33,12 @@ import br.manogarrafa.biblioteca.ui.theme.Typography
 import br.manogarrafa.biblioteca.ui.utils.Book
 
 @Composable
-fun CardItem(book: Book) {
+fun CardItem(modifier: Modifier = Modifier, book: Book) {
     val cardHeight = 250
     val cardWidth = cardHeight * 0.75
     val titleHeight = cardHeight * 0.20
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(width = cardWidth.dp, height = cardHeight.dp)
     ) {
         Image(
@@ -121,7 +121,7 @@ fun CardItemPreview() {
                     )
                 )
             ) {
-                CardItem(it)
+                CardItem(book = it)
             }
         }
     }
