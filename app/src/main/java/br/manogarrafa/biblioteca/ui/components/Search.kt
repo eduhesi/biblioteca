@@ -1,9 +1,11 @@
 package br.manogarrafa.biblioteca.ui.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,6 +14,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -37,6 +40,55 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import android.R as androidR
+
+@Composable
+fun Header(
+    onNavigate: () -> Unit,
+    selected: Pair<SearchByOption, (SearchByOption) -> Unit>,
+    onSearch: (String) -> Unit,
+    order: Pair<Boolean, (Boolean) -> Unit>
+) {
+    var showSearch by remember { mutableStateOf(false) }
+
+    Surface(shadowElevation = 4.dp) {
+        if (showSearch) {
+            // Exibe o componente Search
+            Search(
+                onSearch = {
+                    onSearch(it)
+//                    showSearch = false // Oculta o search após pesquisar, se desejar
+                },
+                selected = selected,
+                order = order
+            )
+        } else {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                IconButton(onClick = onNavigate) {
+                    Icon(
+                        painter = painterResource(id = androidR.drawable.ic_btn_speak_now),
+                        contentDescription = "Voltar"
+                    )
+                }
+                Text(
+                    text = "Biblioteca",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.weight(1f)
+                )
+                IconButton(onClick = { showSearch = true }) {
+                    Icon(
+                        painter = painterResource(id = androidR.drawable.ic_menu_search),
+                        contentDescription = "Pesquisar"
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun SearchBySelector(

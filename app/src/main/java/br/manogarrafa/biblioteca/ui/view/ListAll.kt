@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.manogarrafa.biblioteca.ui.components.CardList
+import br.manogarrafa.biblioteca.ui.components.Header
 import br.manogarrafa.biblioteca.ui.components.Search
 import br.manogarrafa.biblioteca.ui.utils.Book
 import br.manogarrafa.biblioteca.ui.utils.SearchByOption
@@ -29,8 +30,17 @@ fun MainScreen(modifier: Modifier = Modifier, onBookClick: (Book) -> Unit) {
             .fillMaxSize()
             .padding(horizontal = 16.dp) // margem lateral
     ) {
-        Spacer(Modifier.height(16.dp))
-        Search(
+//        Spacer(Modifier.height(16.dp))
+//        Search(
+//            onSearch = {
+//                query = it
+//                hasFilter = it.isNotEmpty()
+//            },
+//            selected = selectedOption to { selectedOption = it },
+//            order = orderMode to { orderMode = it }
+//        )
+        Header(
+            onNavigate = {},
             onSearch = {
                 query = it
                 hasFilter = it.isNotEmpty()
